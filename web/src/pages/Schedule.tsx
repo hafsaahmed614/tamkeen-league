@@ -81,7 +81,7 @@ export function Schedule() {
               to="/select-team"
               className="text-sm text-tamkeen-primary font-medium"
             >
-              Filter by team
+              Filter By Team
             </Link>
           )
         }
