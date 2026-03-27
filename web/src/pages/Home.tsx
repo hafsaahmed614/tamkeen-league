@@ -120,7 +120,7 @@ export function Home() {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-6 text-center font-semibold text-gray-500 text-base">
+                    <span className="w-6 text-center font-semibold text-tamkeen-primary text-base">
                       {index + 1}
                     </span>
                     <span className="font-medium">{team.name}</span>
