@@ -105,6 +105,36 @@ export function Home() {
             </div>
           )}
         </div>
+
+        {/* Top Teams */}
+        {!standingsLoading && standings.length > 0 && (
+          <div className="w-full max-w-md mt-8">
+            <h2 className="text-sm font-medium text-black/50 dark:text-white/50 mb-3 text-center">Top Teams</h2>
+            <div className="card overflow-hidden">
+              {standings.slice(0, 3).map((team, index) => (
+                <button
+                  key={team.id}
+                  onClick={() => navigate(`/team/${encodeURIComponent(team.name)}`)}
+                  className={`w-full flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-left ${
+                    index < 2 ? 'border-b border-gray-100 dark:border-gray-700' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-bold ${
+                      index === 0 ? 'bg-yellow-400/20 text-yellow-600' :
+                      index === 1 ? 'bg-gray-300/30 text-gray-500' :
+                      'bg-amber-600/20 text-amber-700'
+                    }`}>
+                      {index + 1}
+                    </span>
+                    <span className="font-medium">{team.name}</span>
+                  </div>
+                  <span className="text-sm text-gray-500">{team.wins}-{team.losses}-{team.ties}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   )
