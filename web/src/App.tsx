@@ -60,10 +60,11 @@ function App() {
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'games' },
         (payload) => {
-          if (payload.new && payload.new.status === 'live' && payload.old?.status !== 'live') {
+          const newRecord = payload.new as Record<string, unknown> | null
+          if (newRecord && newRecord.status === 'live') {
             setLiveToast({
-              home_team_name: payload.new.home_team_name as string,
-              away_team_name: payload.new.away_team_name as string
+              home_team_name: newRecord.home_team_name as string,
+              away_team_name: newRecord.away_team_name as string
             })
             // Auto-dismiss after 8 seconds
             setTimeout(() => setLiveToast(null), 8000)
