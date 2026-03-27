@@ -47,6 +47,10 @@ if connected:
         response = supabase.table("teams").select("*").order("name").execute()
         return response.data
 
+    # Show success message if one exists from previous action
+    if "success_msg" in st.session_state:
+        st.success(st.session_state.pop("success_msg"))
+
     # Add new team section
     st.subheader("Add New Team")
     with st.form("add_team_form"):
@@ -56,7 +60,7 @@ if connected:
         if submitted and new_team_name:
             try:
                 supabase.table("teams").insert({"name": new_team_name}).execute()
-                st.success(f"Team '{new_team_name}' added successfully!")
+                st.session_state["success_msg"] = f"'{new_team_name}' team was added!"
                 st.cache_data.clear()
                 st.rerun()
             except Exception as e:

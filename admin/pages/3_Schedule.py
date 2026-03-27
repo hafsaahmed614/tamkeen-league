@@ -36,6 +36,10 @@ if connected:
     else:
         team_names = [team['name'] for team in teams]
 
+        # Show success message if one exists from previous action
+        if "success_msg" in st.session_state:
+            st.success(st.session_state.pop("success_msg"))
+
         # Add new game section
         st.subheader("Schedule New Game")
         with st.form("add_game_form"):
@@ -82,7 +86,7 @@ if connected:
                             "location": location,
                             "status": "scheduled"
                         }).execute()
-                        st.success(f"Game scheduled: {home_team} vs {away_team}")
+                        st.session_state["success_msg"] = f"{home_team} vs {away_team} game was scheduled!"
                         st.cache_data.clear()
                         st.rerun()
                     except Exception as e:

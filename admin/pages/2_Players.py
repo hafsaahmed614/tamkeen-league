@@ -38,6 +38,10 @@ if connected:
         # Create team name list
         team_names = [team['name'] for team in teams]
 
+        # Show success message if one exists from previous action
+        if "success_msg" in st.session_state:
+            st.success(st.session_state.pop("success_msg"))
+
         # Add new player section
         st.subheader("Add New Player")
         with st.form("add_player_form"):
@@ -59,7 +63,7 @@ if connected:
                         "team_name": selected_team,
                         "jersey_number": jersey_number
                     }).execute()
-                    st.success(f"Player '{player_name}' added to {selected_team}!")
+                    st.session_state["success_msg"] = f"'{player_name}' was added to {selected_team}!"
                     st.cache_data.clear()
                     st.rerun()
                 except Exception as e:
