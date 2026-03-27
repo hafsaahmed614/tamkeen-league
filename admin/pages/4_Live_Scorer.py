@@ -202,7 +202,12 @@ if connected:
                         home_data = supabase.table("teams").select("losses").eq("name", home_team_name).execute().data[0]
                         supabase.table("teams").update({"wins": away_data['wins'] + 1}).eq("name", away_team_name).execute()
                         supabase.table("teams").update({"losses": home_data['losses'] + 1}).eq("name", home_team_name).execute()
-                    # Tie: no record changes
+                    else:
+                        # Tie: increment ties for both teams
+                        home_data = supabase.table("teams").select("ties").eq("name", home_team_name).execute().data[0]
+                        away_data = supabase.table("teams").select("ties").eq("name", away_team_name).execute().data[0]
+                        supabase.table("teams").update({"ties": home_data['ties'] + 1}).eq("name", home_team_name).execute()
+                        supabase.table("teams").update({"ties": away_data['ties'] + 1}).eq("name", away_team_name).execute()
 
                     st.success("Game ended!")
                     st.cache_data.clear()

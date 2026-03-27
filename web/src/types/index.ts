@@ -5,6 +5,7 @@ export interface Team {
   name: string
   wins: number
   losses: number
+  ties: number
   created_at: string
 }
 

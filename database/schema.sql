@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS teams (
     name TEXT NOT NULL UNIQUE,
     wins INTEGER DEFAULT 0,
     losses INTEGER DEFAULT 0,
+    ties INTEGER DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

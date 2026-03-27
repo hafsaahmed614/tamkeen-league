@@ -50,10 +50,10 @@ export function shareGameResult(
   })
 }
 
-export function shareStandings(standings: { name: string; wins: number; losses: number }[]): Promise<boolean> {
+export function shareStandings(standings: { name: string; wins: number; losses: number; ties: number }[]): Promise<boolean> {
   const standingsText = standings
     .slice(0, 5)
-    .map((t, i) => `${i + 1}. ${t.name} (${t.wins}-${t.losses})`)
+    .map((t, i) => `${i + 1}. ${t.name} (${t.wins}-${t.losses}-${t.ties})`)
     .join('\n')
 
   return share({

@@ -53,6 +53,7 @@ if connected:
                 'Team': team_name,
                 'W': team['wins'],
                 'L': team['losses'],
+                'T': team.get('ties', 0),
                 'PF': 0,
                 'PA': 0,
             }
@@ -94,7 +95,7 @@ if connected:
             standings_data.append({
                 'Rank': rank,
                 'Team': team['Team'],
-                'Record': f"{team['W']}-{team['L']}",
+                'Record': f"{team['W']}-{team['L']}-{team['T']}",
                 'PF': team['PF'],
                 'PA': team['PA'],
                 'Diff': f"+{diff}" if diff > 0 else str(diff)

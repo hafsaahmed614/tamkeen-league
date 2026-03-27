@@ -58,7 +58,7 @@ export function Standings() {
             <div className="grid grid-cols-[auto_1fr_repeat(4,minmax(0,1fr))] gap-2 px-4 py-2 bg-gray-50 dark:bg-gray-800 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
               <span className="w-8">#</span>
               <span>Team</span>
-              <span className="text-center">W-L</span>
+              <span className="text-center">W-L-T</span>
               <span className="text-center">PF</span>
               <span className="text-center">PA</span>
               <span className="text-center">+/-</span>
@@ -76,7 +76,7 @@ export function Standings() {
                 <span className={`font-medium truncate ${team.name === selectedTeamName ? 'text-tamkeen-primary' : ''}`}>
                   {team.name}
                 </span>
-                <span className="text-center font-semibold">{team.wins}-{team.losses}</span>
+                <span className="text-center font-semibold">{team.wins}-{team.losses}-{team.ties}</span>
                 <span className="text-center text-sm text-gray-600 dark:text-gray-400">{team.points_for}</span>
                 <span className="text-center text-sm text-gray-600 dark:text-gray-400">{team.points_against}</span>
                 <span className={`text-center text-sm font-medium ${

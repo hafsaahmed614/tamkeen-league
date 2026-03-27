@@ -9,19 +9,6 @@ import { TeamDetail } from './pages/TeamDetail'
 import { GameDetail } from './pages/GameDetail'
 import { getDarkMode } from './lib/storage'
 
-// Check if user has made a team preference (selected team or chose "view all")
-function hasTeamPreference(): boolean {
-  return localStorage.getItem('tamkeen_preferences') !== null
-}
-
-// Protected route that redirects to team selector if no preference set
-function HomeRoute() {
-  if (!hasTeamPreference()) {
-    return <Navigate to="/select-team" replace />
-  }
-  return <Home />
-}
-
 function App() {
   const location = useLocation()
 
@@ -34,7 +21,7 @@ function App() {
 
   return (
     <Routes location={location} key={location.pathname}>
-      <Route path="/" element={<HomeRoute />} />
+      <Route path="/" element={<Home />} />
       <Route path="/select-team" element={<TeamSelector />} />
       <Route path="/standings" element={<Standings />} />
       <Route path="/schedule" element={<Schedule />} />

@@ -95,7 +95,7 @@ export function GameDetail() {
           )}
           {isFinal && (
             <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">
-              FINAL
+              {game.home_score === game.away_score ? 'FINAL - TIE' : 'FINAL'}
             </span>
           )}
           {!isLive && !isFinal && (

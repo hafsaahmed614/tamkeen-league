@@ -91,7 +91,7 @@ export function TeamDetail() {
             <h1 className="text-2xl font-bold">{decodedTeamName}</h1>
             {team && (
               <div className="flex gap-4 mt-1 text-white/80">
-                <span>Record: <span className="font-semibold text-white">{team.wins}-{team.losses}</span></span>
+                <span>Record: <span className="font-semibold text-white">{team.wins}-{team.losses}-{team.ties}</span></span>
                 {teamStanding && (
                   <span>Rank: <span className="font-semibold text-white">#{teamStanding.rank}</span></span>
                 )}

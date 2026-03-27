@@ -80,7 +80,7 @@ export function TeamSelector() {
                     {team.name}
                   </div>
                   <div className="text-sm text-black/60 dark:text-white/60">
-                    {team.wins}-{team.losses} Record
+                    {team.wins}-{team.losses}-{team.ties} Record
                   </div>
                 </div>
               </div>

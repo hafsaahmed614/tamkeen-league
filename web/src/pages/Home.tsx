@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
 import { Layout } from '../components/Layout'
 import { Header } from '../components/Header'
 import { GameCard } from '../components/GameCard'
@@ -14,12 +14,33 @@ import { supabase } from '../lib/supabase'
 import type { ScoreLog } from '../types'
 
 export function Home() {
+  const navigate = useNavigate()
   const selectedTeamName = getSelectedTeam()
   const { team } = useTeam(selectedTeamName)
   const { games: liveGames } = useLiveGames()
   const { games: upcomingGames, loading: upcomingLoading } = useGames(selectedTeamName, 'scheduled')
   const { standings, loading: standingsLoading } = useStandings()
   const { players: topPlayers, loading: playersLoading } = useLeaderboard(3)
+
+  // Team search dropdown state
+  const [teamSearch, setTeamSearch] = useState('')
+  const [teamDropdownOpen, setTeamDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const filteredStandings = standings.filter(t =>
+    t.name.toLowerCase().includes(teamSearch.toLowerCase())
+  )
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setTeamDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   // Scores for live games
   const [gameScores, setGameScores] = useState<Record<number, { home: number; away: number }>>({})
@@ -58,20 +79,7 @@ export function Home() {
 
   return (
     <Layout>
-      <Header
-        title={selectedTeamName ? `${selectedTeamName}` : 'Tamkeen League'}
-        rightAction={
-          <Link
-            to="/select-team"
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
-            aria-label="Change team"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-          </Link>
-        }
-      />
+      <Header title="Tamkeen League" />
 
       <div className="p-4 space-y-6">
         {/* Team Stats Card (if team selected) */}
@@ -88,7 +96,7 @@ export function Home() {
               <div className="flex gap-6 text-sm">
                 <div>
                   <span className="opacity-80">Record:</span>{' '}
-                  <span className="font-semibold">{team?.wins}-{team?.losses}</span>
+                  <span className="font-semibold">{team?.wins}-{team?.losses}-{team?.ties}</span>
                 </div>
                 <div>
                   <span className="opacity-80">Diff:</span>{' '}
@@ -135,12 +143,12 @@ export function Home() {
           </section>
         )}
 
-        {/* Quick Standings */}
+        {/* Team Search & Standings */}
         <section>
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold">Standings</h2>
+            <h2 className="text-lg font-semibold">Teams</h2>
             <Link to="/standings" className="text-sm text-tamkeen-primary font-medium">
-              See All
+              Full Standings
             </Link>
           </div>
           {standingsLoading ? (
@@ -148,28 +156,58 @@ export function Home() {
               <LoadingSpinner />
             </div>
           ) : (
-            <div className="card overflow-hidden">
-              {standings.slice(0, 5).map((team, index) => (
-                <Link
-                  key={team.id}
-                  to={`/team/${encodeURIComponent(team.name)}`}
-                  className={`flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 ${
-                    team.name === selectedTeamName ? 'bg-tamkeen-primary/5' : ''
-                  } ${index < 4 ? 'border-b border-gray-100 dark:border-gray-700' : ''}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="w-6 text-center font-medium text-gray-500">
-                      {team.rank}
-                    </span>
-                    <span className={`font-medium ${team.name === selectedTeamName ? 'text-tamkeen-primary' : ''}`}>
-                      {team.name}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    {team.wins}-{team.losses}
-                  </span>
-                </Link>
-              ))}
+            <div className="relative" ref={dropdownRef}>
+              <div className="card overflow-hidden">
+                <div className="relative">
+                  <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Search teams..."
+                    value={teamSearch}
+                    onChange={(e) => {
+                      setTeamSearch(e.target.value)
+                      setTeamDropdownOpen(true)
+                    }}
+                    onFocus={() => setTeamDropdownOpen(true)}
+                    className="w-full pl-9 pr-4 py-3 bg-transparent text-sm focus:outline-none text-black dark:text-white placeholder-gray-400"
+                  />
+                </div>
+              </div>
+              {teamDropdownOpen && (
+                <div className="absolute z-50 mt-1 w-full card overflow-hidden shadow-lg max-h-64 overflow-y-auto">
+                  {filteredStandings.length === 0 ? (
+                    <div className="p-3 text-sm text-gray-500 text-center">No teams found</div>
+                  ) : (
+                    filteredStandings.map((team, index) => (
+                      <button
+                        key={team.id}
+                        onClick={() => {
+                          setTeamDropdownOpen(false)
+                          setTeamSearch('')
+                          navigate(`/team/${encodeURIComponent(team.name)}`)
+                        }}
+                        className={`w-full flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 text-left ${
+                          index < filteredStandings.length - 1 ? 'border-b border-gray-100 dark:border-gray-700' : ''
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="w-6 text-center font-medium text-gray-500 text-sm">
+                            {team.rank}
+                          </span>
+                          <span className="font-medium">
+                            {team.name}
+                          </span>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {team.wins}-{team.losses}-{team.ties}
+                        </span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
           )}
         </section>

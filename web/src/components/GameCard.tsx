@@ -45,6 +45,10 @@ export function GameCard({ game, homeScore = 0, awayScore = 0 }: GameCardProps) 
         </div>
 
         <div className="space-y-2">
+          {showScores && isFinal && homeScore === awayScore && (
+            <div className="text-center text-sm font-medium text-amber-600 dark:text-amber-400 mb-1">TIE</div>
+          )}
+
           <div className="flex justify-between items-center">
             <span className={`font-medium ${showScores && homeScore > awayScore ? 'text-tamkeen-primary' : ''}`}>
               {game.home_team_name}
