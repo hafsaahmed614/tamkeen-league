@@ -30,9 +30,9 @@ export function Home() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center p-6">
+      <div className="flex flex-col items-center justify-center p-6" style={{ minHeight: 'calc(100vh - 5rem)' }}>
         {/* Logo and branding */}
-        <div className="flex items-center gap-3 mt-8 mb-8">
+        <div className="flex items-center gap-3 mb-8">
           <img
             src="https://tamkeensports.org/wp-content/uploads/2025/07/Maroon-transparent-logo-scaled-100x100.png"
             alt="Tamkeen Volleyball League"
@@ -65,7 +65,7 @@ export function Home() {
                       setTeamDropdownOpen(true)
                     }}
                     onFocus={() => setTeamDropdownOpen(true)}
-                    className="w-full pl-9 pr-4 py-3 bg-transparent text-sm focus:outline-none text-black dark:text-white placeholder-gray-400"
+                    className="w-full pl-9 pr-4 py-3 bg-transparent text-base focus:outline-none text-black dark:text-white placeholder-gray-400"
                   />
                 </div>
               </div>
