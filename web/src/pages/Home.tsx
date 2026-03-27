@@ -120,11 +120,7 @@ export function Home() {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-bold ${
-                      index === 0 ? 'bg-yellow-400/20 text-yellow-600' :
-                      index === 1 ? 'bg-gray-300/30 text-gray-500' :
-                      'bg-amber-600/20 text-amber-700'
-                    }`}>
+                    <span className="w-6 text-center font-medium text-gray-500 text-sm">
                       {index + 1}
                     </span>
                     <span className="font-medium">{team.name}</span>
