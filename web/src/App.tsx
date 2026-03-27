@@ -60,6 +60,7 @@ function App() {
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'games' },
         (payload) => {
+          console.log('Game update received:', payload)
           const newRecord = payload.new as Record<string, unknown> | null
           if (newRecord && newRecord.status === 'live') {
             setLiveToast({
@@ -71,7 +72,9 @@ function App() {
           }
         }
       )
-      .subscribe()
+      .subscribe((status) => {
+        console.log('Realtime subscription status:', status)
+      })
 
     return () => {
       supabase.removeChannel(channel)
