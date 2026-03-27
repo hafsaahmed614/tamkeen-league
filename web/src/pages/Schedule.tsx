@@ -20,30 +20,51 @@ export function Schedule() {
   const [gameScores, setGameScores] = useState<Record<number, { home: number; away: number }>>({})
 
   // Fetch scores for completed/live games
-  useEffect(() => {
-    const fetchScores = async () => {
-      const gamesWithScores = games.filter(g => g.status !== 'scheduled')
-      if (gamesWithScores.length === 0) return
+  const fetchScores = async () => {
+    const gamesWithScores = games.filter(g => g.status !== 'scheduled')
+    if (gamesWithScores.length === 0) return
 
-      const { data } = await supabase
-        .from('score_logs')
-        .select('*')
-        .in('game_id', gamesWithScores.map(g => g.id))
+    const { data } = await supabase
+      .from('score_logs')
+      .select('*')
+      .in('game_id', gamesWithScores.map(g => g.id))
 
-      if (data) {
-        const scores: Record<number, { home: number; away: number }> = {}
-        for (const game of gamesWithScores) {
-          const gameLogs = data.filter((l: ScoreLog) => l.game_id === game.id)
-          scores[game.id] = {
-            home: gameLogs.filter((l: ScoreLog) => l.team_name === game.home_team_name).reduce((s: number, l: ScoreLog) => s + l.points, 0),
-            away: gameLogs.filter((l: ScoreLog) => l.team_name === game.away_team_name).reduce((s: number, l: ScoreLog) => s + l.points, 0)
-          }
+    if (data) {
+      const scores: Record<number, { home: number; away: number }> = {}
+      for (const game of gamesWithScores) {
+        const gameLogs = data.filter((l: ScoreLog) => l.game_id === game.id)
+        scores[game.id] = {
+          home: gameLogs.filter((l: ScoreLog) => l.team_name === game.home_team_name).reduce((s: number, l: ScoreLog) => s + l.points, 0),
+          away: gameLogs.filter((l: ScoreLog) => l.team_name === game.away_team_name).reduce((s: number, l: ScoreLog) => s + l.points, 0)
         }
-        setGameScores(scores)
       }
+      setGameScores(scores)
     }
+  }
 
+  useEffect(() => {
     fetchScores()
+  }, [games])
+
+  // Real-time score updates and game status changes
+  useEffect(() => {
+    const channel = supabase
+      .channel('schedule-live-updates')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'score_logs' },
+        () => { fetchScores() }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'games' },
+        () => { refetch() }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [games])
 
   const filteredGames = filter === 'all'
