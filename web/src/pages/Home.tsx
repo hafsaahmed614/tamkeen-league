@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState, useRef } from 'react'
 import { Layout } from '../components/Layout'
-import { Header } from '../components/Header'
 import { LoadingSpinner } from '../components/Loading'
 import { useStandings } from '../hooks/useStandings'
 
@@ -31,23 +30,18 @@ export function Home() {
 
   return (
     <Layout>
-      <Header title="" />
-
       <div className="flex flex-col items-center p-6">
         {/* Logo and branding */}
-        <div className="flex items-center gap-3 mt-8 mb-2">
+        <div className="flex items-center gap-3 mt-8 mb-8">
           <img
             src="https://tamkeensports.org/wp-content/uploads/2025/07/Maroon-transparent-logo-scaled-100x100.png"
-            alt="Tamkeen League"
-            className="w-12 h-12"
+            alt="Tamkeen Volleyball League"
+            className="w-10 h-10"
           />
-          <h1 className="text-2xl font-bold font-heading text-tamkeen-primary">
-            Tamkeen League
+          <h1 className="text-xl font-bold font-heading text-tamkeen-primary">
+            Tamkeen Volleyball League
           </h1>
         </div>
-        <p className="text-black/60 dark:text-white/60 text-center font-body mb-8">
-          Find and explore teams
-        </p>
 
         {/* Searchable team dropdown */}
         <div className="w-full max-w-md">
