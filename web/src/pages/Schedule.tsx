@@ -94,19 +94,7 @@ export function Schedule() {
 
   return (
     <Layout>
-      <Header
-        title={selectedTeamName ? `${selectedTeamName} Schedule` : 'Schedule'}
-        rightAction={
-          !selectedTeamName && (
-            <Link
-              to="/select-team"
-              className="text-sm text-tamkeen-primary font-medium"
-            >
-              Filter By Team
-            </Link>
-          )
-        }
-      />
+      <Header title="Schedule" />
 
       {/* Filter tabs */}
       <div className="sticky top-14 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-30">
