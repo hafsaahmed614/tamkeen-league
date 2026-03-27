@@ -31,20 +31,22 @@ export function Home() {
 
   return (
     <Layout>
-      <Header title="Tamkeen League" />
+      <Header title="" />
 
       <div className="flex flex-col items-center p-6">
         {/* Logo and branding */}
-        <img
-          src="https://tamkeensports.org/wp-content/uploads/2025/07/Maroon-transparent-logo-scaled-100x100.png"
-          alt="Tamkeen League"
-          className="w-24 h-24 mb-6 mt-8"
-        />
-        <h1 className="text-2xl font-bold font-heading text-tamkeen-primary mb-2">
-          Tamkeen League
-        </h1>
+        <div className="flex items-center gap-3 mt-8 mb-2">
+          <img
+            src="https://tamkeensports.org/wp-content/uploads/2025/07/Maroon-transparent-logo-scaled-100x100.png"
+            alt="Tamkeen League"
+            className="w-12 h-12"
+          />
+          <h1 className="text-2xl font-bold font-heading text-tamkeen-primary">
+            Tamkeen League
+          </h1>
+        </div>
         <p className="text-black/60 dark:text-white/60 text-center font-body mb-8">
-          Search for a team to view their details
+          Find and explore teams
         </p>
 
         {/* Searchable team dropdown */}
@@ -62,7 +64,7 @@ export function Home() {
                   </svg>
                   <input
                     type="text"
-                    placeholder="Search teams..."
+                    placeholder="Search Teams..."
                     value={teamSearch}
                     onChange={(e) => {
                       setTeamSearch(e.target.value)
